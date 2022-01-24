@@ -1,4 +1,8 @@
-const HDWalletProvider = require('@truffle/hdwallet-provider');
+require('dotenv').config();
+const HDWalletProvider = require("@truffle/hdwallet-provider");
+
+const privateKey = process.env.PRIVATE_KEY
+const projectId = process.env.ALCHEMY_PROJECT_ID
 
 module.exports = {
   /**
@@ -23,8 +27,8 @@ module.exports = {
       port: 7545,            // Standard Ethereum port (default: none)
       network_id: "*",       // Any network (default: none)
     },
-    mumbai: {
-      provider: () => new HDWalletProvider(process.env.MNEMONIC, `https://polygon-mumbai.g.alchemy.com/v2/${process.env.ALCHEMY_PROJECT_ID}`),
+    matic: {
+      provider: () => new HDWalletProvider(privateKey, `https://polygon-mumbai.g.alchemy.com/v2/${projectId}`),
       network_id: 80001,
       confirmations: 2,
       timeoutBlocks: 200,
