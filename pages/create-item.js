@@ -41,19 +41,24 @@ export default function CreateItem() {
     const createSale = async url => {
         const web3 = new Web3(Web3.givenProvider);
         const networkId = await web3.eth.net.getId()
-        const accounts = await web3.eth.getAccounts()
-        const signer = accounts[0]
 
-        const nftContract = new web3.eth.Contract(NFT.abi, NFT.networks[networkId].address)
-        let transaction = await nftContract.methods.createToken(url).send({ from: signer })
-        const tokenId = transaction.events.Transfer.returnValues.tokenId
-        const price = web3.utils.toWei(formInput.price.toString(), 'ether')
+        if (networkId === 80001) {
+            const accounts = await web3.eth.getAccounts()
+            const signer = accounts[0]
 
-        const marketplaceContract = new web3.eth.Contract(Marketplace.abi, Marketplace.networks[networkId].address)
-        const listingFee = await marketplaceContract.methods.listingFee().call()
-        transaction = await marketplaceContract.methods.createMarketItem(NFT.networks[networkId].address, tokenId, price).send({ value: listingFee, from: signer })
+            const nftContract = new web3.eth.Contract(NFT.abi, NFT.networks[networkId].address)
+            let transaction = await nftContract.methods.createToken(url).send({ from: signer })
+            const tokenId = transaction.events.Transfer.returnValues.tokenId
+            const price = web3.utils.toWei(formInput.price.toString(), 'ether')
 
-        router.push('/')
+            const marketplaceContract = new web3.eth.Contract(Marketplace.abi, Marketplace.networks[networkId].address)
+            const listingFee = await marketplaceContract.methods.listingFee().call()
+            transaction = await marketplaceContract.methods.createMarketItem(NFT.networks[networkId].address, tokenId, price).send({ value: listingFee, from: signer })
+
+            router.push('/')
+        } else {
+            alert('Make sure you are on the Polygon Mumbai testnet.')
+        }
     }
 
     return (

@@ -1,20 +1,9 @@
 require('dotenv').config();
 const HDWalletProvider = require("@truffle/hdwallet-provider");
 
-const privateKey = process.env.PRIVATE_KEY
-const projectId = process.env.ALCHEMY_PROJECT_ID
+const mnemonic = process.env.MNEMONIC
 
 module.exports = {
-  /**
-   * Networks define how you connect to your ethereum client and let you set the
-   * defaults web3 uses to send transactions. If you don't specify one truffle
-   * will spin up a development blockchain for you on port 9545 when you
-   * run `develop` or `test`. You can ask a truffle command to use a specific
-   * network from the command line, e.g
-   *
-   * $ truffle test --network <network-name>
-   */
-
   networks: {
     // Useful for testing. The `development` name is special - truffle uses it by default
     // if it's defined here and no other network is specified at the command line.
@@ -28,12 +17,12 @@ module.exports = {
       network_id: "*",       // Any network (default: none)
     },
     matic: {
-      provider: () => new HDWalletProvider(privateKey, `https://polygon-mumbai.g.alchemy.com/v2/${projectId}`),
+      provider: () => new HDWalletProvider(mnemonic, "https://matic-mumbai.chainstacklabs.com/"),
       network_id: 80001,
-      confirmations: 2,
+      // confirmations: 2,
       timeoutBlocks: 200,
       skipDryRun: true
-    }
+    },
     // Another network with more advanced options...
     // advanced: {
     // port: 8777,             // Custom port

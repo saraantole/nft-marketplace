@@ -11,7 +11,7 @@ contract Marketplace is ReentrancyGuard {
     Counters.Counter private _itemsSold;
 
     address payable owner;
-    uint256 public listingFee = 0.025 ether;
+    uint256 public listingFee = 0.025 ether; // MATIC -> coin of the chain
     struct MarketItem {
         uint256 itemId;
         address nftContract;

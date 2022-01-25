@@ -17,33 +17,38 @@ export default function Home() {
     const web3 = new Web3(Web3.givenProvider)
     setWeb3(web3)
     const networkId = await web3.eth.net.getId()
-    const nftContract = new web3.eth.Contract(NFT.abi, NFT.networks[networkId].address)
-    const marketplaceContract = new web3.eth.Contract(Marketplace.abi, Marketplace.networks[networkId].address)
-    const data = await marketplaceContract.methods.fetchMarketItems().call()
+    console.log(networkId)
+    if (networkId === 80001) {
+      const nftContract = new web3.eth.Contract(NFT.abi, NFT.networks[networkId].address)
+      const marketplaceContract = new web3.eth.Contract(Marketplace.abi, Marketplace.networks[networkId].address)
+      const data = await marketplaceContract.methods.fetchMarketItems().call()
+  
+      const items = await Promise.all(data.map(async i => {
+        const tokenUri = await nftContract.methods.tokenURI(i.tokenId).call()
+        const meta = await fetch(tokenUri)
+        const data = await meta.json()
+  
+        const item = {
+          price: web3.utils.fromWei(i.price),
+          tokenId: i.tokenId,
+          seller: i.seller,
+          owner: i.owner,
+          image: data.image,
+          name: data.name,
+          description: data.description
+        }
+        return item
+      }))
+  
+      setNfts(items)
+      setLoadingState('loaded')
+    } else {
+      alert('Make sure you are on the Polygon Mumbai testnet.')
+    }
 
-    const items = await Promise.all(data.map(async i => {
-      const tokenUri = await nftContract.methods.tokenURI(i.tokenId).call()
-      const meta = await fetch(tokenUri)
-      const data = await meta.json()
-
-      const item = {
-        price: web3.utils.fromWei(i.price),
-        tokenId: i.tokenId,
-        seller: i.seller,
-        owner: i.owner,
-        image: data.image,
-        name: data.name,
-        description: data.description
-      }
-      return item
-    }))
-
-    setNfts(items)
-    setLoadingState('loaded')
   }
 
   const buyNFT = async nft => {
-    console.log(nft)
     const accounts = await web3.eth.getAccounts()
     const signer = accounts[0]
     const networkId = await web3.eth.net.getId()
@@ -61,7 +66,7 @@ export default function Home() {
           {
             loadingState === 'loaded' && !nfts.length ?
               <h1 className='px-20 py-10 text-3xl'>No items found.</h1>
-              : nfts.map((nft, i) => (
+              : nfts?.map((nft, i) => (
                 <div key={i} className='border shadow rounded-xl overflow-hidden'>
                   <img src={nft.image} alt='nft' />
                   <div className='p-4'>
@@ -71,7 +76,7 @@ export default function Home() {
                     </div>
                   </div>
                   <div className='p-4 bg-black'>
-                    <p className='text-2xl ab-4 font-bold text-white'>{nft.price} ETH</p>
+                    <p className='text-2xl ab-4 font-bold text-white'>{nft.price} MATIC</p>
                     <button className='w-full bg-pink-500 text-white font-bold py-2 px-12 rounded' onClick={() => buyNFT(nft)}>Buy</button>
                   </div>
                 </div>
