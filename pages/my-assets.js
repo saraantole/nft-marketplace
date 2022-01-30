@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
 import Web3 from 'web3'
 
-import NFT from '../build/contracts/NFT.json'
-import Marketplace from '../build/contracts/Marketplace.json'
+import NFT from '../abi/NFT.json'
+import Marketplace from '../abi/Marketplace.json'
 
 export default function MyAssets() {
     const [myNfts, setMyNfts] = useState([])

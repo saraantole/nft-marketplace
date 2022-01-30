@@ -3,8 +3,8 @@ import { useState } from 'react'
 import { useRouter } from 'next/router'
 import Web3 from 'web3'
 
-import NFT from '../build/contracts/NFT.json'
-import Marketplace from '../build/contracts/Marketplace.json'
+import NFT from '../abi/NFT.json'
+import Marketplace from '../abi/Marketplace.json'
 
 const client = ipfsHttpClient('https://ipfs.infura.io:5001/api/v0')
 

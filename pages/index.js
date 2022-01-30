@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
 import Web3 from 'web3'
 
-import NFT from '../build/contracts/NFT.json'
-import Marketplace from '../build/contracts/Marketplace.json'
+import NFT from '../abi/NFT.json'
+import Marketplace from '../abi/Marketplace.json'
 
 export default function Home() {
   const [web3, setWeb3] = useState(undefined)
@@ -17,7 +17,7 @@ export default function Home() {
     const web3 = new Web3(Web3.givenProvider)
     setWeb3(web3)
     const networkId = await web3.eth.net.getId()
-    console.log(networkId)
+    
     if (networkId === 80001) {
       const nftContract = new web3.eth.Contract(NFT.abi, NFT.networks[networkId].address)
       const marketplaceContract = new web3.eth.Contract(Marketplace.abi, Marketplace.networks[networkId].address)
